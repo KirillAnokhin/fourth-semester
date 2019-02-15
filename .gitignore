@@ -1,5 +1,4 @@
 
 wordsort/*.o
 wordsort/*.d
-
-
+wordsort/dict
