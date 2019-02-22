@@ -1,17 +1,13 @@
-CC := gcc
-CFLAGS := -g -Wall -MD
--include *.d
+OBJ = dict.o reader.o
+PROG = dict
+CFLAGS += -Wall -g
+HDR = dict.h reader.h
 
-.PHONY: clean
-	rm -rf *.o b	
+all : $(PROG)
+$(PROG):$(OBJ)
+	$(cc) -o $@ $(PROG) $(OBJ) $(CFLAGS)
 
-$%.o: %.c
-	mkdir -p $(@D)
-	$(CC) $(CFLAGS) $< -o $@
+$(OBJ):$(HDR)
 
-BUILD_SRC := dict.c wf.c reader.c
-BUILD_OBJ := $(BUILD_SRC:.c=.o)
-.PHONY: build
-build: dict
-dict: $(BUILD_OBJ)
-	$(CC) $(BUILD_OBJ) -o $@
+clean: 
+	$(RM) $(OBJ) 

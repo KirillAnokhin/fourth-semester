@@ -14,6 +14,7 @@ typedef struct hash_entry {
 } hash_entry;
 
 typedef struct hash_table {
+	//struct hash_fn;
 	hash_entry **buckets;
 	size_t n_buckets;
 } hash_table;
@@ -23,6 +24,14 @@ hash_table *hash_table_new (size_t n_buckets)
 	hash_table *table = calloc(1, sizeof(hash_table));
 	table->n_buckets  = n_buckets;
 	table->buckets    = calloc(n_buckets, sizeof(hash_entry*));
+
+	//table.insert_data = hash_insert_data;
+
+	/*
+	hash_table_t *ht = hash_table_new(10);
+	ht->insert_data(...);
+	ht->delete_table(ht);
+	*/
 	return table;
 }
 
@@ -56,34 +65,52 @@ int hash_insert_data(hash_table *table, char *key, size_t key_s,
 	       		size_t **data)
 {
 	size_t index = dl_new_hash(key) % table->n_buckets;
+	// first elem
 	if(table->buckets[index] == NULL) {
 		hash_entry *en = hash_entry_new(key, key_s);
 		if (!en)
 			return -1;
 		table->buckets[index] = en;
+	// there is an elem
 	} else {
 		hash_entry *tmp = table->buckets[index];
 		while (1) {
+			// new and old elems matched
 			if (!hash_keys_cmp(key, key_s, 
-			    		   tmp->key, tmp->key_s)) {
+			    		   tmp->key, tmp->key_s)) {	
 				*data = &tmp->data;
-				return 1; 
+				return 0; 
 			} 
 			if (!tmp->next) {
 				tmp->next = hash_entry_new(key, key_s);
 				*data = &tmp->next->data;
-				return 0;
+				return 1;
 			}
 		}
+		assert(0);
+		return -1;
 	}
-	assert(0);
-	return -1;
+	return 1;
 }
 
-void hash_dump(hash_table table) 
+void hash_dump(hash_table *table) 
 {
-	for(int i = 0; i < table.n_buckets; i++)
-		printf("[%d] %s\n", i, table.buckets[i]->key);	
+	//assert(!"Not implemented");
+	for(int i = 0; i < table->n_buckets; i++) {
+		if(table->buckets[i]) { 
+			hash_entry* en = table->buckets[i];
+			printf("[%d] ", i);
+			/*
+			while(en) {
+				printf("%s ", table->buckets[i]->key);
+				en = en->next;	
+			}
+			*/
+			printf("data: %lu\n", table->buckets[i]->data);
+			}
+		else 
+			printf("[%d] NULL\n", i);
+	}
 }
 
 static void hash_delete_data(hash_table *table) 
