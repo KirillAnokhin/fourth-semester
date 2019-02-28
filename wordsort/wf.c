@@ -1,17 +1,21 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "dict.h"
 #include <stddef.h>
+
+//#include "dict.h"
+#include "reader.h"
 
 int main(int argc, char* argv[])
 {
-	size_t p;
-	size_t *data;
-	size_t n_buckets = 8;
+	size_t n_buckets = 10;
 	hash_table *table = hash_table_new(n_buckets);
-	hash_insert_data(table, "string", sizeof("string"), &data);
-	hash_insert_data(table, "string", sizeof("string"), &data);
-	hash_insert_data(table, "string", sizeof("string"), &data);
+	FILE *stream;
+	stream = fopen("test_read", "r");
+	if (reader(stream, table) == -1) {
+		printf("reader error\n");
+		return -1;
+	}
 	hash_dump(table);
+	fclose(stream);
 	return 0;
 }

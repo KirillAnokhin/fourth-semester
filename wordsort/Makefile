@@ -1,13 +1,11 @@
-OBJ = dict.o reader.o
-PROG = dict
-CFLAGS += -Wall -g
-HDR = dict.h reader.h
+CFLAGS=-Wall -g
+OBJ=dict.o reader.o wf.o
 
-all : $(PROG)
-$(PROG):$(OBJ)
-	$(cc) -o $@ $(PROG) $(OBJ) $(CFLAGS)
+all: dict
 
-$(OBJ):$(HDR)
+dict:	$(OBJ)
+	gcc $(CFLAGS) $(OBJ) -o dict
 
-clean: 
-	$(RM) $(OBJ) 
+clean:
+	rm *.o
+

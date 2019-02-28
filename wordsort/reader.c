@@ -8,36 +8,35 @@
 #define READER_BUF_SIZE 1024
 
 
-int reader_process(hash_table *table, char *buf, size_t buf_s);
-/*
+int reader_process(hash_table *table, char *buf, size_t buf_s)
 {
 	char *buf_2 = malloc(READER_BUF_SIZE);
-	size_t len;
+	char *ptr_1 = buf;
+	char *ptr_2 = buf_2;
+	size_t len = 0;
 	size_t *data;
-	while (1) {
-		len = 1;
-		char *ptr_1 = buf;
-		char *ptr_2 = buf_2;
-		if (isalpha(*ptr)) {
-			*ptr_2 = *ptr;
-			ptr++;
+
+
+	for (ptr_1 = buf; ptr_1 <= buf + buf_s && (*ptr_1 != '\0'); ptr_1++) {
+		if (isalpha(*ptr_1)) {
+			*ptr_2 = *ptr_1;
 			ptr_2++;
 			len++;
-		} else
+		} else {
 			*ptr_2 = '\0';
-		hash_insert_data(table, buf_2, buf_s, &data);
-	} 
-	
-	while (1) {
-		char *ptr = buf;
-		if(!isalpha(*ptr))
-			*ptr = '\0';
-		ptr++;
-	}
-		
+			len++;
+			ptr_2 = buf_2;
+			int hash_case = hash_insert_data(table, ptr_2, len, &data);
+			if (hash_case != -1)
+				(*data)++;
+			else 
+				return -1;
+			len = 0;
+		}
+	}			
 	return 0;
 }
-*/
+
 
 int reader(FILE *stream, hash_table *table) 
 {
@@ -51,7 +50,8 @@ int reader(FILE *stream, hash_table *table)
 		for (char *tmp = buf + buf_s;
 	             isalpha(*tmp) && tmp <= buf; tmp--)
 			unused++;
-		//reader_process(table, buf, buf_s - unused);
+		if(reader_process(table, buf, buf_s - unused) == -1)
+			return -1;
 		if (unused)	
 			memmove(buf, buf + buf_s - unused, unused);
 	} while (ret);
