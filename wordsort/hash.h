@@ -6,17 +6,13 @@ struct hash_table;
 
 typedef struct hash_table hash_table;
 
-
-typedef struct hash_fn { 
-	int  (*insert_data)(hash_table * table, char *key, size_t key_s,
-				size_t **data);
-	void (*dump)(hash_table *table);
-	void (*delete_table)(hash_table *table);
-} hash_fn;
-
-/*
-table.hash_insert_data()
-*/
+/* Polymorphic class */
+typedef struct dict { 
+	int  (*insert_data)(struct dict *dc, char *key, size_t key_s,
+		            size_t **data);
+	void (*delete_table)(struct dict *dc);
+	void (*dump)(struct dict *dc);
+} dict;
 
 int hash_insert_data(hash_table *table, char *key, size_t key_s,
 			 size_t **data);

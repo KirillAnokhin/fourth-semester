@@ -8,8 +8,10 @@
 #define READER_BUF_SIZE 1024
 
 
-int reader_process(hash_table *table, char *buf, size_t buf_s)
+char *reader_process(hash_table *table, char *buf, size_t buf_s)
 {
+	//not implemented 
+	//must return char* 
 	char *buf_2 = malloc(READER_BUF_SIZE);
 	char *ptr_1 = buf;
 	char *ptr_2 = buf_2;

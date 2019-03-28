@@ -4,7 +4,7 @@
 #include <assert.h>
 #include <stdint.h>
 
-#include "dict.h"
+#include "hash.h"
 
 typedef struct hash_entry {
 	char  *key;
@@ -14,7 +14,7 @@ typedef struct hash_entry {
 } hash_entry;
 
 typedef struct hash_table {
-	struct hash_fn hash;
+	dict vtable;
 	hash_entry **buckets;
 	size_t n_buckets;
 } hash_table;
@@ -30,15 +30,10 @@ hash_table *hash_table_new (size_t n_buckets)
 	table->n_buckets  = n_buckets;
 	table->buckets    = calloc(n_buckets, sizeof(hash_entry*));
 
-	table->hash.insert_data  = hash_insert_data;
-	table->hash.dump = hash_dump;
-	table->hash.delete_table = hash_delete_table;
+	table->vtable.insert_data  = hash_insert_data;
+	table->vtable.dump = hash_dump;
+	table->vtable.delete_table = hash_delete_table;
 
-	/*
-	hash_table_t *ht = hash_table_new(10);
-	ht->insert_data(...);
-	ht->delete_table(ht);
-	*/
 	return table;
 }
 
@@ -46,7 +41,6 @@ static hash_entry *hash_entry_new (char *key, size_t key_s)
 {
 	hash_entry *entry = calloc(1, sizeof(hash_entry));
 	entry->key = malloc(key_s);
-	//entry->data = 1;
 	memcpy(entry->key, key, key_s);
 	entry->key_s = key_s;
 	return entry;
