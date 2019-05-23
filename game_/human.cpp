@@ -17,24 +17,19 @@ Human::~Human()
 
 void Human::onkey(int n)
 {
-	//printf("key pressed = %d ", n);
-	static std::fstream f("out",std::ios::out);
-	f << 1111;
-	f.close();
+
 	switch (n) {
 		case('d'):
-			snake->direction = RIGHT;
+			snake->Snake::set_direction(RIGHT);
 			break;
 		case('a'):
-			snake->direction = LEFT;
+			snake->Snake::set_direction(LEFT);
            		break;
         	case('w'):
-        		snake->direction = UP;
+        		snake->Snake::set_direction(UP);
            	 	break;
         	case('s'):
-            		snake->direction = DOWN;
+            		snake->Snake::set_direction(DOWN);
             		break;
 	}
-	//game->move();
-	//View::get()->draw();
 }

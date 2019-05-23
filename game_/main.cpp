@@ -13,7 +13,6 @@ int main() {
    	Snake s;
    	Human h(&s, &g);
    	g.add(&s);
-
    	v->setModel(&g);
     	v->draw();
     	v->run();

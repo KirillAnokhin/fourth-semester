@@ -8,6 +8,7 @@
 #include <functional>
 #include <poll.h>
 #include <unistd.h>
+#include <sys/time.h>
 
 using namespace std::placeholders;
 
@@ -41,7 +42,7 @@ void Tui::draw()
 	drawLineX(0, x, y);
 	drawLineY(0, y, x);
 
-	game->paint(std::bind(&View::snakePainter, this, _1, _2));
+	game->snake_p(std::bind(&View::snakePainter, this, _1, _2));
 	game->rabbit_p(std::bind(&View::rabbitPainter, this, _1));
 
 	fflush(stdout);
@@ -94,15 +95,17 @@ Tui::~Tui()
 
 void Tui::run()
 {
-  	struct pollfd fds;
-    	fds.fd = 0;
-    	fds.events = POLLIN; 
+  	struct pollfd fds = {1, POLLIN, 0};
+    	//fds.fd = 0;
+    	//fds.events = POLLIN;
+	struct timeval t1, t2;	
 
    	draw();
 
    	while(1){
 	
 		char c;
+		gettimeofday(&t1, NULL);
 		int n = poll(&fds, 1, time_deligate.first);
 		if(n == 1) {
         		read(1, &c, 1);
@@ -110,6 +113,10 @@ void Tui::run()
 			{
         			onkey_delegate->onkey(c);
 			}
+			gettimeofday(&t2, NULL);
+			time_deligate.first -= (t2.tv_sec-t1.tv_sec)*1000+(t2.tv_usec-t1.tv_usec)/1000;
+			if(time_deligate.first < 0)
+				time_deligate.first = 0;
 		}
 		else {
 		        time_deligate.second();

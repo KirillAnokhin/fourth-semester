@@ -29,10 +29,13 @@ public:
 	Snake();
 	Snake(const Snake &);
 
+	bool snake_death;
 	std::list<Coord> body;
 	Dir direction;
-	Snake & operator=(Snake const &s);
+	Dir last_direction;
+	Snake &operator=(Snake const &s);
 	void move();
+	void set_direction(Dir d);
 };
 
 using Rabbit = Coord;
@@ -44,16 +47,15 @@ class Game
 public:
 	Game();
 
-	std::list<Snake*>      snakes;
-	std::list<Rabbit>      rabbits;
+	std::list<Snake*> snakes;
+	std::list<Rabbit> rabbits;
 
-	void paint(SnakePainter p);
+	void snake_p(SnakePainter p);
 	void rabbit_p(RabbitPainter r);
 	void add(Snake *p);
 	void move();
 	void remove_rab(Coord);
 	void new_rab();
-
 };
 
 #endif //GAME_H
